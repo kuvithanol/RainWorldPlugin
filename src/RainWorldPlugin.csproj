@@ -16,7 +16,7 @@
 
 </Project>
 
-<!--Include a RainWorldPlugin.csproj.user file that looks like the following:
+<!--Include a <ProjectName>.csproj.user file that looks like the following:
 <Project>
 
   <PropertyGroup>
