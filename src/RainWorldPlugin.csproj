@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net35</TargetFramework>
@@ -13,19 +13,22 @@
     <Reference Include="$(References)/Assembly-CSharp.dll" />
     <Reference Include="$(References)/HOOKS-Assembly-CSharp.dll" />
   </ItemGroup>
-
-</Project>
-
-<!--Include a <ProjectName>.csproj.user file that looks like the following:
-<Project>
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
   <PropertyGroup>
-    <References>C:/path/to/your/references/folder</References>
+    <References>C:\Users\ness from undertale\Desktop\RWreferences</References>
   </PropertyGroup>
   
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Copy SourceFiles="$(TargetDir)$(TargetName)$(TargetExt)" DestinationFolder="C:/path/to/your/BepInEx/plugins/folder" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName)$(TargetExt)" DestinationFolder="C:\Program Files (x86)\Steam\steamapps\common\Rain World\BepInEx\plugins" />
   </Target>
 
 </Project>
--->
