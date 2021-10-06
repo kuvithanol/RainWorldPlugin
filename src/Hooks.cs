@@ -1,20 +1,21 @@
-﻿namespace RainWorldPlugin;
-
-public sealed class Hooks
+﻿namespace RainWorldPlugin
 {
-    private readonly PluginState state;
-
-    public Hooks(PluginState state)
+    public sealed class Hooks
     {
-        this.state = state;
+        private readonly PluginState state;
 
-        On.RainWorld.Start += RainWorld_Start;
-    }
+        public Hooks(PluginState state)
+        {
+            this.state = state;
 
-    private void RainWorld_Start(On.RainWorld.orig_Start orig, RainWorld self)
-    {
-        orig(self);
+            On.RainWorld.Start += RainWorld_Start;
+        }
 
-        state.Logger.LogInfo("Hello World!");
+        private void RainWorld_Start(On.RainWorld.orig_Start orig, RainWorld self)
+        {
+            orig(self);
+
+            state.Logger.LogInfo("Hello World!");
+        }
     }
 }

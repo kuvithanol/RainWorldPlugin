@@ -1,15 +1,16 @@
 ﻿using BepInEx;
 
-namespace RainWorldPlugin;
-
-[BepInPlugin("org.author.rainworldplugin", nameof(RainWorldPlugin), "0.1.0")]
-public sealed class Plugin : BaseUnityPlugin
+namespace RainWorldPlugin
 {
-    // Entry point for the plugin.
-    public void OnEnable()
+    [BepInPlugin("org.author.rainworldplugin", nameof(RainWorldPlugin), "0.1.0")]
+    public sealed class Plugin : BaseUnityPlugin
     {
-        PluginState state = new(Logger);
+        // Entry point for the plugin.
+        public void OnEnable()
+        {
+            PluginState state = new PluginState(Logger);
 
-        _ = new Hooks(state);
+            _ = new Hooks(state);
+        }
     }
 }

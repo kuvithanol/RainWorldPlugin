@@ -1,13 +1,14 @@
 ﻿using BepInEx.Logging;
 
-namespace RainWorldPlugin;
-
-public sealed class PluginState
+namespace RainWorldPlugin
 {
-    public PluginState(ManualLogSource logger)
+    public sealed class PluginState
     {
-        Logger = logger;
-    }
+        public PluginState(ManualLogSource logger)
+        {
+            Logger = logger;
+        }
 
-    public ManualLogSource Logger { get; }
+        public ManualLogSource Logger { get; }
+    }
 }
