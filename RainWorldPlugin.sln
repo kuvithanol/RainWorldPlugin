@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31612.314
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RainWorldPlugin", "src\RainWorldPlugin.csproj", "{69BF24B2-B741-4944-99C2-7DA0A7625C5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "squeezeThrough", "src\squeezeThrough.csproj", "{69BF24B2-B741-4944-99C2-7DA0A7625C5E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

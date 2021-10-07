@@ -12,6 +12,12 @@
     <Reference Include="$(References)/UnityEngine.dll" />
     <Reference Include="$(References)/Assembly-CSharp.dll" />
     <Reference Include="$(References)/HOOKS-Assembly-CSharp.dll" />
+    <Reference Include="ConfigMachine">
+      <HintPath>..\..\..\RWreferences\ConfigMachine.dll</HintPath>
+    </Reference>
+    <Reference Include="Partiality">
+      <HintPath>..\..\..\RWreferences\Partiality.dll</HintPath>
+    </Reference>
   </ItemGroup>
 	
 	
