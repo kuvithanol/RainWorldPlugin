@@ -12,25 +12,18 @@ namespace squeezeThrough
 
             On.Player.Update += Player_Update;
             On.Player.ctor += Player_ctor;
-            On.Creature.Violence += Creature_Violence;
+            On.Weapon.HitSomethingWithoutStopping += Weapon_HitSomethingWithoutStopping;
         }
 
-        private void Creature_Violence(On.Creature.orig_Violence orig, Creature self, BodyChunk source, Vector2? directionAndMomentum, BodyChunk hitChunk, PhysicalObject.Appendage.Pos hitAppendage, Creature.DamageType type, float damage, float stunBonus)
+        private void Weapon_HitSomethingWithoutStopping(On.Weapon.orig_HitSomethingWithoutStopping orig, Weapon self, PhysicalObject obj, BodyChunk chunk, PhysicalObject.Appendage appendage)
         {
-            if (self is Player player)
+            if(!(self.thrownBy is Player player && player == obj))
             {
-                if(self.collisionLayer != 0 && (source.owner is Spear || source.owner is Rock)) // && (type == Creature.DamageType.Stab || type == Creature.DamageType.Blunt)
-                {
-                    orig(self, source, directionAndMomentum, hitChunk, hitAppendage, type, damage, stunBonus);
-                }
-                else
-                {
-                    //NOT calling orig!!! owned!!!
-                }
+                orig(self, obj, chunk, appendage);
             }
             else
             {
-                orig(self, source, directionAndMomentum, hitChunk, hitAppendage, type, damage, stunBonus);
+                Debug.Log("#winning");
             }
         }
 
