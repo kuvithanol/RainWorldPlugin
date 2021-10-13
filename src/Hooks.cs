@@ -12,18 +12,78 @@ namespace squeezeThrough
 
             On.Player.Update += Player_Update;
             On.Player.ctor += Player_ctor;
-            On.Weapon.HitSomethingWithoutStopping += Weapon_HitSomethingWithoutStopping;
+            On.Creature.Update += Creature_Update;
         }
 
-        private void Weapon_HitSomethingWithoutStopping(On.Weapon.orig_HitSomethingWithoutStopping orig, Weapon self, PhysicalObject obj, BodyChunk chunk, PhysicalObject.Appendage appendage)
+        private void Creature_Update(On.Creature.orig_Update orig, Creature self, bool eu)
         {
-            if(!(self.thrownBy is Player player && player == obj))
+            orig(self, eu);
+            if (!self.dead)
             {
-                orig(self, obj, chunk, appendage);
-            }
-            else
-            {
-                Debug.Log("#winning");
+                if (self is BigNeedleWorm noot)
+                {
+                    try
+                    {
+                        Tracker.CreatureRepresentation focus = noot.AI.focusCreature;
+                        if (focus.representedCreature.realizedCreature != null)
+                        {
+                            if (focus.representedCreature.realizedCreature is Player player && noot.AI.behavior == BigNeedleWormAI.Behavior.Attack)
+                            {
+                                isPursued[player] = true;
+                                Debug.Log("noot pursuing player " + player.playerState.playerNumber);
+                            }
+                        }
+                    }
+                    catch { }
+                }
+                else if (self is Scavenger scav)
+                {
+                    try
+                    {
+                        Tracker.CreatureRepresentation focus = scav.AI.focusCreature;
+                        if (focus.representedCreature.realizedCreature != null)
+                        {
+                            if (focus.representedCreature.realizedCreature is Player player && scav.AI.behavior == ScavengerAI.Behavior.Attack)
+                            {
+                                isPursued[player] = true;
+                                Debug.Log("scav pursuing player " + player.playerState.playerNumber);
+                            }
+                        }
+                    }
+                    catch { }
+                }
+                else if (self is Lizard liz)
+                {
+                    try
+                    {
+                        Tracker.CreatureRepresentation focus = liz.AI.focusCreature;
+                        if (focus.representedCreature.realizedCreature != null)
+                        {
+                            if (focus.representedCreature.realizedCreature is Player player && liz.AI.behavior == LizardAI.Behavior.Hunt)
+                            {
+                                isPursued[player] = true;
+                                Debug.Log("liz pursuing player " + player.playerState.playerNumber);
+                            }
+                        }
+                    }
+                    catch { }
+                }
+                else if (self is Vulture vulch)
+                {
+                    try
+                    {
+                        Tracker.CreatureRepresentation focus = vulch.AI.focusCreature;
+                        if (focus.representedCreature.realizedCreature != null)
+                        {
+                            if (focus.representedCreature.realizedCreature is Player player && vulch.AI.behavior == VultureAI.Behavior.Hunt)
+                            {
+                                isPursued[player] = true;
+                                Debug.Log("something pursuing player " + player.playerState.playerNumber);
+                            }
+                        }
+                    }
+                    catch { }
+                }
             }
         }
 
@@ -31,48 +91,75 @@ namespace squeezeThrough
         {
             orig(self, abstractCreature, world);
             previousRollCounter.Add(self, 0);
-            rolling.Add(self, false);
-            crouching.Add(self, false);
             canSqueeze.Add(self, false);
-            inCorridor.Add(self, false);
+            isPursued.Add(self, false);
+            attemptSqueeze.Add(self, false);
+            attemptEnterSqueeze.Add(self, false);
+            //slipWasHeld.Add(self, false);
         }
 
         //bool corridorjump = false;
         static Dictionary<Player, int> previousRollCounter = new Dictionary<Player, int>();
 
-        static Dictionary<Player, bool> rolling = new Dictionary<Player, bool>();
-
-        static Dictionary<Player, bool> crouching = new Dictionary<Player, bool>();
-
-        static Dictionary<Player, bool> inCorridor = new Dictionary<Player, bool>();
+        //static Dictionary<Player, bool> slipWasHeld = new Dictionary<Player, bool>();
 
         static Dictionary<Player, bool> canSqueeze = new Dictionary<Player, bool>();
+
+        static Dictionary<Player, bool> attemptSqueeze = new Dictionary<Player, bool>();
+
+        static Dictionary<Player, bool> isPursued = new Dictionary<Player, bool>();
+
+        static Dictionary<Player, bool> attemptEnterSqueeze = new Dictionary<Player, bool>();
 
         private void Player_Update(On.Player.orig_Update orig, Player self, bool eu)
         {
             previousRollCounter[self] = self.rollCounter;
             orig(self, eu);
-            //===============================================================================================================//
+            if (self != null)
+            {//===============================================================================================================//
+                int wasCollisionLayer = self.collisionLayer;
 
-            crouching[self] = self.bodyMode == Player.BodyModeIndex.Crawl;
+                bool crouching = self.bodyMode == Player.BodyModeIndex.Crawl;
 
-            if (previousRollCounter[self] != self.rollCounter) 
-                rolling[self] = true; else rolling[self] = false;
+                bool rolling = previousRollCounter[self] != self.rollCounter;
 
-            if (self.bodyMode == Player.BodyModeIndex.CorridorClimb)
-                inCorridor[self] = true; else inCorridor[self] = false;
+                bool inCorridor = self.bodyMode == Player.BodyModeIndex.CorridorClimb;
 
-            canSqueeze[self] = (crouching[self] || rolling[self] || inCorridor[self]) && !self.exhausted;
+                canSqueeze[self] = (crouching || rolling || inCorridor) && !(self.exhausted || isPursued[self]); //Debug.Log("cansqueeze: " + (bool)canSqueeze[self]);
 
-            //===============================================================================================================//   all code within finds conditions that allow the slug to squeeze
+                Debug.Log(attemptEnterSqueeze[self] = Input.GetKey(MyOI.controls[self.playerState.playerNumber]) && !attemptSqueeze[self]);
 
-            if (Input.GetKey(MyOI.controls[self.playerState.playerNumber]) && canSqueeze[self])
-            {
-                self.ChangeCollisionLayer(0);
-            }
-            else
-            {
-                self.ChangeCollisionLayer(1);
+                Debug.Log(attemptSqueeze[self] = Input.GetKey(MyOI.controls[self.playerState.playerNumber]));
+
+                //===============================================================================================================//   all code within finds conditions that allow the slug should squeeze
+
+                if (attemptSqueeze[self] && canSqueeze[self])
+                {
+                    self.ChangeCollisionLayer(2); //within a squeeze
+                }
+                else
+                {
+                    self.ChangeCollisionLayer(1); //not squeeze
+                }
+
+                if(wasCollisionLayer != self.collisionLayer && !attemptSqueeze[self]) //exit squeeze
+                {
+                    self.room.PlaySound(SoundID.Snail_Pop, self.mainBodyChunk.pos, 0.4f, 0.8f);
+                    Debug.Log("exit squeeze");
+                }
+
+                if (attemptEnterSqueeze[self] && !canSqueeze[self]) //fails to enter a squeeze
+                {
+                    self.room.PlaySound(SoundID.Snail_Pop, self.mainBodyChunk.pos, 0.3f, 0.6f);
+                    Debug.Log("FAIL");
+                }
+                else if (attemptEnterSqueeze[self] && canSqueeze[self]) //wins at entering squeeze
+                {
+                    self.room.PlaySound(SoundID.Snail_Pop, self.mainBodyChunk.pos, 0.3f, 1f);
+                    Debug.Log("WIN");
+                }
+
+                isPursued[self] = false;
             }
         }
     }
