@@ -52,6 +52,70 @@ namespace squeezeThrough
                     }
                     catch { }
                 }
+                else if (self is BigSpider spider)
+                {
+                    try
+                    {
+                        Tracker.CreatureRepresentation focus = spider.AI.preyTracker.MostAttractivePrey;
+                        if (focus.representedCreature.realizedCreature != null)
+                        {
+                            if (focus.representedCreature.realizedCreature is Player player && spider.AI.behavior == BigSpiderAI.Behavior.Hunt)
+                            {
+                                isPursued[player] = true;
+                                Debug.Log("spider pursuing player " + player.playerState.playerNumber);
+                            }
+                        }
+                    }
+                    catch { }
+                }
+                else if (self is Centipede centi)
+                {
+                    try
+                    {
+                        Tracker.CreatureRepresentation focus = centi.AI.preyTracker.MostAttractivePrey;
+                        if (focus.representedCreature.realizedCreature != null)
+                        {
+                            if (focus.representedCreature.realizedCreature is Player player && centi.AI.behavior == CentipedeAI.Behavior.Hunt)
+                            {
+                                isPursued[player] = true;
+                                Debug.Log("spider pursuing player " + player.playerState.playerNumber);
+                            }
+                        }
+                    }
+                    catch { }
+                }
+                else if (self is TentaclePlant plant)
+                {
+                    try
+                    {
+                        Tracker.CreatureRepresentation focus = plant.AI.preyTracker.MostAttractivePrey;
+                        if (focus.representedCreature.realizedCreature != null)
+                        {
+                            if (focus.representedCreature.realizedCreature is Player player)
+                            {
+                                isPursued[player] = true;
+                                Debug.Log("spider pursuing player " + player.playerState.playerNumber);
+                            }
+                        }
+                    }
+                    catch { }
+                }
+                else if (self is DropBug wig)
+                {
+                    try
+                    {
+                        Tracker.CreatureRepresentation focus = wig.AI.focusCreature;
+                        if (focus.representedCreature.realizedCreature != null)
+                        {
+                            if (focus.representedCreature.realizedCreature is Player player && wig.AI.behavior == DropBugAI.Behavior.Hunt)
+                            {
+                                isPursued[player] = true;
+                                Debug.Log("liz pursuing player " + player.playerState.playerNumber);
+                            }
+                        }
+                    }
+                    catch { }
+                }
                 else if (self is Lizard liz)
                 {
                     try
